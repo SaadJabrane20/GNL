@@ -6,7 +6,7 @@
 /*   By: sajabran <sajabran@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 19:01:11 by sajabran          #+#    #+#             */
-/*   Updated: 2026/11/13 22:44:03 by sajabran         ###   ########.fr       */
+/*   Updated: 2026/11/14 11:30:40 by sajabran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,11 @@ static char	*append_stash(char *stash, char *buffer)
 	if (!tmp)
 	{
 		free(stash);
+		stash = NULL;
 		return (NULL);
 	}
 	free(stash);
+	stash = NULL;
 	return (tmp);
 }
 
@@ -60,9 +62,7 @@ static char	*update_stash(char *stash)
 	char	*tmp;
 	size_t	i;
 	size_t	stash_len;
-	size_t	j;
 
-	j = 0;
 	tmp = NULL;
 	if (!stash)
 		return (NULL);
@@ -75,10 +75,12 @@ static char	*update_stash(char *stash)
 	if (i == stash_len)
 	{
 		free(stash);
+		stash = NULL;
 		return (NULL);
 	}
 	tmp = ft_strdup(stash + i);
 	free(stash);
+	stash = NULL;
 	return (tmp);
 }
 
@@ -130,9 +132,9 @@ char	*get_next_line(int fd)
 	if (!line)
 	{
 		free(line);
+		line = NULL;
 		return (NULL);
 	}
 	stash = update_stash(stash);
-	printf("stash --> %s\n" , stash);
 	return (line);
 }
