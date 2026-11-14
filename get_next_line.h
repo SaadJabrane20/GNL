@@ -6,7 +6,7 @@
 /*   By: sajabran <sajabran@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 18:58:46 by sajabran          #+#    #+#             */
-/*   Updated: 2026/11/13 22:45:05 by sajabran         ###   ########.fr       */
+/*   Updated: 2026/11/14 14:21:14 by sajabran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdint.h>
-#ifndef BUFFER_SIZE
-	# define BUFFER_SIZE 42
-#endif
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+
 char	*ft_strchr(const char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
 size_t	ft_strlen(const char *s);

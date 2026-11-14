@@ -6,7 +6,7 @@
 /*   By: sajabran <sajabran@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 19:01:11 by sajabran          #+#    #+#             */
-/*   Updated: 2026/11/14 11:30:40 by sajabran         ###   ########.fr       */
+/*   Updated: 2026/11/14 14:36:41 by sajabran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,30 +30,27 @@ static char	*append_stash(char *stash, char *buffer)
 
 static int	read_line(int fd, char **str)
 {
-	char	buffer[BUFFER_SIZE + 1];
+	char	*buffer;
 	ssize_t	bytes;
 
+	buffer = malloc((size_t)BUFFER_SIZE + 1);
+	if (!buffer)
+		return (-1);
 	if (!*str)
-	{
 		*str = ft_calloc(1, 1);
-		if (!*str)
-			return (-1);
-	}
+	if (!*str)
+		return (free(buffer), -1);
 	bytes = read(fd, buffer, BUFFER_SIZE);
 	if (bytes <= 0)
 	{
+		free(buffer);
 		if (bytes < 0)
-		{
-			free(str);
-			str = NULL;
-			return (-1);
-		}
+			return (free(*str), *str = NULL, -1);
 		return (0);
 	}
 	buffer[bytes] = '\0';
 	*str = append_stash(*str, buffer);
-	if (!*str)
-		return (-1);
+	free(buffer);
 	return (bytes);
 }
 
@@ -98,7 +95,7 @@ static char	*extract_line(char *stash)
 		i++;
 	if (stash[i] == '\n')
 		i++;
-	line = ft_calloc(i, 1);
+	line = ft_calloc(i + 1, 1);
 	if (line == NULL)
 		return (NULL);
 	while (j < i)
@@ -115,7 +112,7 @@ char	*get_next_line(int fd)
 	char		*line;
 	int			ret;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE >= SIZE_MAX)
+	if (fd < 0 || BUFFER_SIZE <= 0 || (read(fd, 0, 0) < 0))
 		return (NULL);
 	ret = 1;
 	while (!ft_strchr(stash, '\n') && ret > 0)
@@ -132,7 +129,6 @@ char	*get_next_line(int fd)
 	if (!line)
 	{
 		free(line);
-		line = NULL;
 		return (NULL);
 	}
 	stash = update_stash(stash);
