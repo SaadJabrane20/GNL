@@ -6,7 +6,7 @@
 /*   By: sajabran <sajabran@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 19:01:11 by sajabran          #+#    #+#             */
-/*   Updated: 2026/11/14 14:36:41 by sajabran         ###   ########.fr       */
+/*   Updated: 2026/11/18 13:26:37 by sajabran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,22 @@ static int	read_line(int fd, char **str)
 	if (!buffer)
 		return (-1);
 	if (!*str)
-		*str = ft_calloc(1, 1);
-	if (!*str)
-		return (free(buffer), -1);
-	bytes = read(fd, buffer, BUFFER_SIZE);
-	if (bytes <= 0)
 	{
-		free(buffer);
-		if (bytes < 0)
-			return (free(*str), *str = NULL, -1);
-		return (0);
+		*str = ft_calloc(1, 1);
+		if (!*str)
+			return (free(buffer), -1);
 	}
-	buffer[bytes] = '\0';
-	*str = append_stash(*str, buffer);
+	bytes = read(fd, buffer, BUFFER_SIZE);
+	if (bytes < 0)
+	{
+		free(*str);
+		*str = NULL;
+	}
+	else if (bytes > 0)
+	{
+		buffer[bytes] = '\0';
+		*str = append_stash(*str, buffer);
+	}
 	free(buffer);
 	return (bytes);
 }
@@ -112,21 +115,17 @@ char	*get_next_line(int fd)
 	char		*line;
 	int			ret;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || (read(fd, 0, 0) < 0))
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	ret = 1;
 	while (!ft_strchr(stash, '\n') && ret > 0)
 		ret = read_line(fd, &stash);
 	if (ret < 0)
-		return (NULL);
-	if (!stash || !*stash)
 	{
-		free(stash);
-		stash = NULL;
 		return (NULL);
 	}
 	line = extract_line(stash);
-	if (!line)
+	if (line == NULL)
 	{
 		free(line);
 		return (NULL);
