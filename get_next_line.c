@@ -121,11 +121,16 @@ char	*get_next_line(int fd)
 	while (!ft_strchr(stash, '\n') && bytes > 0)
 		bytes = ft_read_line(fd, &stash);
 	if (bytes < 0)
+	{
+		free(stash);
+		stash = NULL;
 		return (NULL);
+	}
 	line = ft_extract_line(stash);
 	if (line == NULL)
 	{
-		free(line);
+		free(stash);
+		stash = NULL;
 		return (NULL);
 	}
 	stash = ft_update_stash(stash);
